@@ -1,28 +1,35 @@
 package org.example;
 
 import com.alibaba.fastjson2.JSON;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.server.RoutingHandler;
 import io.undertow.util.Headers;
+import org.example.controllers.PersonController;
 import org.example.models.Person;
 import org.jboss.logging.Logger;
 
 public class Main {
 
     private static final Logger LOGGER = Logger.getLogger(Main.class);
+
+    private static final Dotenv dotenv = Dotenv.load();
     public static void main(final String[] args) {
+        String dbUrl = dotenv.get("DB_URL");
+        System.out.println(dbUrl);
         Undertow server = Undertow.builder()
-                .addHttpListener(8080, "localhost", ROUTES)
+                .addHttpListener(8082, "localhost", ROUTES)
                 .build();
         server.start();
     }
 
     private static final HttpHandler ROUTES = new RoutingHandler()
-            .get("/", Main::helloWorld)
-            .get("/hello/{name}", Main::helloName)
-            .post("/hello", Main::helloPost);
+            .get("/java-benchmark", Main::helloWorld)
+            .get("/java-benchmark/hello/{name}", Main::helloName)
+            .get("/java-benchmark/person/limit/{limit}", PersonController::getPersonLimit)
+            .post("/java-benchmark/hello", Main::helloPost);
 
     private static void helloWorld(HttpServerExchange exchange) {
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");

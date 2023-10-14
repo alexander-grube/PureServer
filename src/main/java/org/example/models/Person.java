@@ -1,22 +1,86 @@
 package org.example.models;
 
 public class Person {
+
+    private int id;
     private String name;
+    private String job;
+    private boolean isAdult;
+    private short favoriteNumber;
+
+    public Person(int id, String name, String job, boolean isAdult, short favoriteNumber) {
+        this.id = id;
+        this.name = name;
+        this.job = job;
+        this.isAdult = isAdult;
+        this.favoriteNumber = favoriteNumber;
+    }
 
     public Person() {
     }
 
-    public Person(String name){
-        this.setName(name);
+    public int getId() {
+        return id;
     }
+
     public String getName() {
         return name;
     }
 
+    public String getJob() {
+        return job;
+    }
+
+    public boolean isAdult() {
+        return isAdult;
+    }
+
+    public short getFavoriteNumber() {
+        return favoriteNumber;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
-        if (name == null || name.length() < 3) {
-            throw new IllegalArgumentException("Name must be at least 3 characters long");
-        }
         this.name = name;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public void setAdult(boolean adult) {
+        isAdult = adult;
+    }
+
+    public void setFavoriteNumber(short favoriteNumber) {
+        this.favoriteNumber = favoriteNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", name=" + name +
+                ", job=" + job +
+                ", isAdult=" + isAdult +
+                ", favoriteNumber=" + favoriteNumber +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Person) {
+            Person person = (Person) obj;
+            return person.getId() == this.getId() && person.getName().equals(this.getName()) && person.getJob().equals(this.getJob()) && person.isAdult() == this.isAdult() && person.getFavoriteNumber() == this.getFavoriteNumber();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getId() + this.getName().hashCode() + this.getJob().hashCode() + (this.isAdult() ? 1 : 0) + this.getFavoriteNumber();
     }
 }
