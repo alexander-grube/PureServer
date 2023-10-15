@@ -76,8 +76,7 @@ public class Person {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Person) {
-            Person person = (Person) obj;
+        if (obj instanceof Person person) {
             return person.getId() == this.getId() && person.getName().equals(this.getName()) && person.getJob().equals(this.getJob()) && person.isAdult() == this.isAdult() && person.getFavoriteNumber() == this.getFavoriteNumber();
         }
         return false;
