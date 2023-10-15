@@ -27,7 +27,7 @@ public class PersonController {
         try (Connection connection = DriverManager.getConnection(dbUrl)) {
             var startTimer = System.currentTimeMillis();
             var statement = connection.createStatement();
-            var resultSet = statement.executeQuery("SELECT * FROM person LIMIT " + limit);
+            var resultSet = statement.executeQuery("SELECT * FROM person ORDER BY id ASC LIMIT " + limit);
             // map the result set to a list of Person objects
             while (resultSet.next()) {
                 var person = new Person(

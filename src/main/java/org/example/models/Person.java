@@ -1,11 +1,15 @@
 package org.example.models;
 
+import com.alibaba.fastjson2.annotation.JSONField;
+
 public class Person {
 
     private int id;
     private String name;
     private String job;
+    @JSONField(name = "is_adult")
     private boolean isAdult;
+    @JSONField(name = "favorite_number")
     private short favoriteNumber;
 
     public Person(int id, String name, String job, boolean isAdult, short favoriteNumber) {
