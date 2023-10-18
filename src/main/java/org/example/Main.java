@@ -1,7 +1,6 @@
 package org.example;
 
 import com.alibaba.fastjson2.JSON;
-import io.github.cdimascio.dotenv.Dotenv;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -11,14 +10,12 @@ import org.example.controllers.PersonController;
 import org.example.models.Person;
 import org.jboss.logging.Logger;
 
+
 public class Main {
 
     private static final Logger LOGGER = Logger.getLogger(Main.class);
 
-    private static final Dotenv dotenv = Dotenv.load();
     public static void main(final String[] args) {
-        String dbUrl = dotenv.get("DB_URL");
-        System.out.println(dbUrl);
         Undertow server = Undertow.builder()
                 .addHttpListener(8082, "localhost", ROUTES)
                 .build();
