@@ -1,7 +1,8 @@
 package org.example.controllers;
 
-import com.alibaba.fastjson2.JSON;
 import com.zaxxer.hikari.HikariDataSource;
+import io.fury.Fury;
+import io.fury.config.Language;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import org.example.models.Person;
@@ -16,7 +17,7 @@ public class PersonController {
     private static final Logger LOGGER = Logger.getLogger(PersonController.class);
 
     public static void getPersonLimit(HttpServerExchange exchange, HikariDataSource dataSource) {
-        String limit = exchange.getQueryParameters().get("limit").getFirst();
+        long limit = Long.parseLong(exchange.getQueryParameters().get("limit").getFirst());
         var persons = new ArrayList<Person>();
         try (Connection connection = dataSource.getConnection()) {
             var startTimer = System.currentTimeMillis();
@@ -41,7 +42,9 @@ public class PersonController {
         } catch (SQLException e) {
             LOGGER.error("Error connecting to database", e);
         }
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-        exchange.getResponseSender().send(JSON.toJSONString(persons));
+        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        fury.register(Person.class);
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/octet-stream");
+        exchange.getResponseSender().send(new String(fury.serialize(persons)));
     }
 }
