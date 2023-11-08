@@ -8,6 +8,7 @@ import io.undertow.util.Headers;
 import org.example.models.Person;
 import org.jboss.logging.Logger;
 
+import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -45,6 +46,6 @@ public class PersonController {
         Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
         fury.register(Person.class);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/octet-stream");
-        exchange.getResponseSender().send(new String(fury.serialize(persons)));
+        exchange.getResponseSender().send(ByteBuffer.wrap(fury.serialize(persons)));
     }
 }
