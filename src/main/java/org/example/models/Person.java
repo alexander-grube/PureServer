@@ -20,6 +20,13 @@ public class Person {
         this.favoriteNumber = favoriteNumber;
     }
 
+    public Person (String name, String job, boolean isAdult, short favoriteNumber) {
+        this.name = name;
+        this.job = job;
+        this.isAdult = isAdult;
+        this.favoriteNumber = favoriteNumber;
+    }
+
     public Person() {
     }
 

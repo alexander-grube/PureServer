@@ -50,6 +50,9 @@ public class Main {
             .get("/java-benchmark", Main::helloWorld)
             .get("/java-benchmark/hello/{name}", Main::helloName)
             .get("/java-benchmark/person/limit/{limit}", exchange -> PersonController.getPersonLimit(exchange, dataSource))
+            .get("/java-benchmark/person/{id}", exchange -> PersonController.getPerson(exchange, dataSource))
+            .get("/java-benchmark/generatePerson", PersonController::generatePerson)
+            .post("/java-benchmark/person", exchange -> PersonController.addPerson(exchange, dataSource))
             .post("/java-benchmark/hello", Main::helloPost);
 
     private static void helloWorld(HttpServerExchange exchange) {
