@@ -25,7 +25,7 @@ public class PersonController {
             var statement = connection.createStatement();
             var resultSet = statement.executeQuery("SELECT * FROM person ORDER BY id ASC LIMIT " + limit);
             var endTimer = System.currentTimeMillis();
-            System.out.println("Time taken to execute query: " + (endTimer - startTimer) + "ms");
+            LOGGER.info("Time taken to execute query: " + (endTimer - startTimer) + "ms");
             startTimer = System.currentTimeMillis();
             // map the result set to a list of Person objects
             while (resultSet.next()) {
@@ -39,7 +39,7 @@ public class PersonController {
                 persons.add(person);
             }
             endTimer = System.currentTimeMillis();
-            System.out.println("Time taken to map result set to list of Person objects: " + (endTimer - startTimer) + "ms");
+            LOGGER.info("Time taken to map result set to list of Person objects: " + (endTimer - startTimer) + "ms");
         } catch (SQLException e) {
             LOGGER.error("Error connecting to database", e);
         }
