@@ -23,8 +23,8 @@ dependencies {
     implementation("org.furyio:fury-core:0.4.1")
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("io.github.cdimascio:java-dotenv:5.2.2")
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation(platform("org.junit:junit-bom:5.10.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
 }
 
 tasks.test {
