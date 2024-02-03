@@ -43,10 +43,16 @@ public class PersonController {
         } catch (SQLException e) {
             LOGGER.error("Error connecting to database", e);
         }
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        Fury fury = Fury.builder().build();
         fury.register(Person.class);
+        var startTimer = System.currentTimeMillis();
+        byte[] bytes = fury.serialize(persons);
+        var endTimer = System.currentTimeMillis();
+        LOGGER.info("Time taken to serialize list of Person objects: " + (endTimer - startTimer) + "ms");
+        var deserialized = (ArrayList<Person>) fury.deserialize(bytes);
+        LOGGER.info("Deserialized: " + deserialized.size() + " persons");
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/octet-stream");
-        exchange.getResponseSender().send(ByteBuffer.wrap(fury.serialize(persons)));
+        exchange.getResponseSender().send(ByteBuffer.wrap(bytes));
     }
 
     public static void addPerson(HttpServerExchange exchange, HikariDataSource dataSource) {
