@@ -43,7 +43,7 @@ public class PersonController {
         } catch (SQLException e) {
             LOGGER.error("Error connecting to database", e);
         }
-        Fury fury = Fury.builder().build();
+        Fury fury = Fury.builder().withLanguage(Language.XLANG).build();
         fury.register(Person.class);
         var startTimer = System.currentTimeMillis();
         byte[] bytes = fury.serialize(persons);
