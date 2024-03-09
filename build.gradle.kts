@@ -25,7 +25,7 @@ dependencies {
     implementation("io.github.cdimascio:java-dotenv:5.2.2")
     testImplementation(platform("org.junit:junit-bom:5.10.2"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
-    testImplementation("org.testcontainers:testcontainers:1.19.6")
+    testImplementation("org.testcontainers:testcontainers:1.19.7")
 }
 
 tasks.test {
