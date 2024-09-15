@@ -15,17 +15,14 @@ repositories {
 }
 
 dependencies {
-    implementation("io.undertow:undertow-core:2.3.14.Final")
-    implementation("io.undertow:undertow-servlet:2.3.14.Final")
-    implementation("io.undertow:undertow-websockets-jsr:2.3.14.Final")
-    implementation("com.alibaba.fastjson2:fastjson2:2.0.51")
-    implementation("org.postgresql:postgresql:42.7.3")
+    implementation("io.undertow:undertow-core:2.3.17.Final")
+    implementation("io.undertow:undertow-servlet:2.3.17.Final")
+    implementation("io.undertow:undertow-websockets-jsr:2.3.17.Final")
+    implementation("com.alibaba.fastjson2:fastjson2:2.0.52")
+    implementation("org.postgresql:postgresql:42.7.4")
     implementation("org.furyio:fury-core:0.4.1")
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("io.github.cdimascio:dotenv-java:3.0.1")
-    testImplementation(platform("org.junit:junit-bom:5.11.0-M1"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0-M1")
-    testImplementation("org.testcontainers:testcontainers:1.19.8")
 }
 
 tasks.test {

@@ -57,7 +57,7 @@ public class PersonController {
 
     public static void addPerson(HttpServerExchange exchange, HikariDataSource dataSource) {
         exchange.getRequestReceiver().receiveFullBytes((exchange1, message) -> {
-            var fury = Fury.builder().withLanguage(Language.JAVA).build();
+            var fury = Fury.builder().withLanguage(Language.XLANG).build();
             fury.register(Person.class);
             Person person = (Person) fury.deserialize(message);
             try (Connection connection = dataSource.getConnection()) {
@@ -93,7 +93,7 @@ public class PersonController {
         } catch (SQLException e) {
             LOGGER.error("Error connecting to database", e);
         }
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        Fury fury = Fury.builder().withLanguage(Language.XLANG).build();
         fury.register(Person.class);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/octet-stream");
         exchange.getResponseSender().send(ByteBuffer.wrap(fury.serialize(person)));
@@ -106,7 +106,7 @@ public class PersonController {
                 true,
                 (short) 42
         );
-        Fury fury = Fury.builder().withLanguage(Language.JAVA).build();
+        Fury fury = Fury.builder().withLanguage(Language.XLANG).build();
         fury.register(Person.class);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/octet-stream");
         exchange.getResponseSender().send(ByteBuffer.wrap(fury.serialize(person)));
