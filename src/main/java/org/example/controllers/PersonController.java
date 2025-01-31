@@ -6,12 +6,14 @@ import io.fury.config.Language;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
 import org.example.models.Person;
+import org.example.utils.ResultSetUtil;
 import org.jboss.logging.Logger;
 
 import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class PersonController {
 
@@ -34,7 +36,11 @@ public class PersonController {
                         resultSet.getString("name"),
                         resultSet.getString("job"),
                         resultSet.getBoolean("is_adult"),
-                        resultSet.getShort("favorite_number")
+                        resultSet.getShort("favorite_number"),
+                        (String[]) resultSet.getArray("hobbies").getArray(),
+                        (Integer[]) resultSet.getArray("lucky_numbers").getArray(),
+                        (Double[]) resultSet.getArray("favorite_numbers").getArray(),
+                        ResultSetUtil.getArrayListFromResultSet(resultSet, "favorite_foods")
                 );
                 persons.add(person);
             }
@@ -43,7 +49,7 @@ public class PersonController {
         } catch (SQLException e) {
             LOGGER.error("Error connecting to database", e);
         }
-        Fury fury = Fury.builder().withLanguage(Language.XLANG).build();
+        Fury fury = Fury.builder().withLanguage(Language.XLANG).requireClassRegistration(false).build();
         fury.register(Person.class);
         var startTimer = System.currentTimeMillis();
         byte[] bytes = fury.serialize(persons);
@@ -57,12 +63,12 @@ public class PersonController {
 
     public static void addPerson(HttpServerExchange exchange, HikariDataSource dataSource) {
         exchange.getRequestReceiver().receiveFullBytes((exchange1, message) -> {
-            var fury = Fury.builder().withLanguage(Language.XLANG).build();
+            var fury = Fury.builder().withLanguage(Language.XLANG).requireClassRegistration(false).build();
             fury.register(Person.class);
             Person person = (Person) fury.deserialize(message);
             try (Connection connection = dataSource.getConnection()) {
                 var statement = connection.createStatement();
-                var resultSet = statement.executeQuery("INSERT INTO person (name, job, is_adult, favorite_number) VALUES ('" + person.getName() + "', '" + person.getJob() + "', " + person.isAdult() + ", " + person.getFavoriteNumber() + ") RETURNING id");
+                var resultSet = statement.executeQuery("INSERT INTO person (name, job, is_adult, favorite_number, hobbies, lucky_numbers, favorite_numbers, favorite_foods) VALUES ('" + person.getName() + "', '" + person.getJob() + "', " + person.isAdult() + ", " + person.getFavoriteNumber() + ", '{" + String.join(",", person.getHobbies()) + "}', '{" + Arrays.toString(person.getLuckyNumbers()).replace("[", "").replace("]", "") + "}', '{" + Arrays.toString(person.getFavoriteNumbers()).replace("[", "").replace("]", "") + "}', '{" + String.join(",", person.getFavoriteFoods()) + "}') RETURNING id");
                 if (resultSet.next()) {
                     person.setId(resultSet.getInt("id"));
                 }
@@ -87,7 +93,11 @@ public class PersonController {
                         resultSet.getString("name"),
                         resultSet.getString("job"),
                         resultSet.getBoolean("is_adult"),
-                        resultSet.getShort("favorite_number")
+                        resultSet.getShort("favorite_number"),
+                        (String[]) resultSet.getArray("hobbies").getArray(),
+                        (Integer[]) resultSet.getArray("lucky_numbers").getArray(),
+                        (Double[]) resultSet.getArray("favorite_numbers").getArray(),
+                        ResultSetUtil.getArrayListFromResultSet(resultSet, "favorite_foods")
                 );
             }
         } catch (SQLException e) {
@@ -104,9 +114,16 @@ public class PersonController {
                 "John Doe",
                 "Software Engineer",
                 true,
-                (short) 42
+                (short) 42,
+                new String[]{"Reading", "Coding"},
+                new Integer[]{7, 13, 42},
+                new Double[]{3.14, 2.718},
+                new ArrayList<>() {{
+                    add("Pizza");
+                    add("Pasta");
+                }}
         );
-        Fury fury = Fury.builder().withLanguage(Language.XLANG).build();
+        Fury fury = Fury.builder().withLanguage(Language.XLANG).requireClassRegistration(false).build();
         fury.register(Person.class);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/octet-stream");
         exchange.getResponseSender().send(ByteBuffer.wrap(fury.serialize(person)));
